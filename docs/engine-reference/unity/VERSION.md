@@ -1,57 +1,30 @@
-# Unity Engine — Version Reference
+# Unity 引擎 — 版本参考
 
-| Field | Value |
+| 字段 | 值 |
 |-------|-------|
-| **Engine Version** | Unity 6.3 LTS |
-| **Release Date** | December 2025 |
-| **Project Pinned** | 2026-02-13 |
-| **Last Docs Verified** | 2026-02-13 |
-| **LLM Knowledge Cutoff** | May 2025 |
+| **引擎版本** | Unity 2023.2 |
+| **项目锁定日期** | 2026-03-31 |
+| **LLM 知识截止日期** | 2025年5月 |
+| **风险等级** | LOW — 版本在 LLM 训练数据范围内 |
 
-## Knowledge Gap Warning
+## 知识差距警告
 
-The LLM's training data likely covers Unity up to ~2022 LTS (2022.3). The entire
-Unity 6 release series (formerly Unity 2023 Tech Stream) introduced significant
-changes that the model does NOT know about. Always cross-reference this directory
-before suggesting Unity API calls.
+Unity 2023.2 在 LLM 训练数据范围内。核心 Unity API 风险较低。
+始终单独验证第三方包的 API。
 
-## Post-Cutoff Version Timeline
+## 版本说明
 
-| Version | Release | Risk Level | Key Theme |
-|---------|---------|------------|-----------|
-| 6.0 | Oct 2024 | HIGH | Unity 6 rebrand, new rendering features, Entities 1.3, DOTS improvements |
-| 6.1 | Nov 2024 | MEDIUM | Bug fixes, stability improvements |
-| 6.2 | Dec 2024 | MEDIUM | Performance optimizations, new input system improvements |
-| 6.3 LTS | Dec 2025 | HIGH | First LTS since 6.0, production-ready DOTS, enhanced graphics features |
+Unity 2023.2（2023年末发布）属于稳定发布序列。
+对此项目的关键特性：
+- 成熟的 2D 功能（Sprite Atlas V2、2D Physics）
+- 稳定的 Addressables 系统
+- C# 8/9 支持
 
-## Major Changes from 2022 LTS to Unity 6.3 LTS
+## 验证来源
 
-### Breaking Changes
-- **Entities/DOTS**: Major API overhaul in Entities 1.0+, complete redesign of ECS patterns
-- **Input System**: Legacy Input Manager deprecated, new Input System is default
-- **Rendering**: URP/HDRP significant upgrades, SRP Batcher improvements
-- **Addressables**: Asset management workflow changes
-- **Scripting**: C# 9 support, new API patterns
+- Unity 文档: https://docs.unity3d.com/
+- 2023.2 发布说明: https://unity.com/releases/editor/whats-new/2023.2.0
 
-### New Features (Post-Cutoff)
-- **DOTS**: Production-ready Entity Component System (Entities 1.3+)
-- **Graphics**: Enhanced URP/HDRP pipelines, GPU Resident Drawer
-- **Multiplayer**: Netcode for GameObjects improvements
-- **UI Toolkit**: Production-ready for runtime UI (replaces UGUI for new projects)
-- **Async Asset Loading**: Improved Addressables performance
-- **Web**: WebGPU support
+## 未来更新
 
-### Deprecated Systems
-- **Legacy Input Manager**: Use new Input System package
-- **Legacy Particle System**: Use Visual Effect Graph
-- **UGUI**: Still supported, but UI Toolkit recommended for new projects
-- **Old ECS (GameObjectEntity)**: Replaced by modern DOTS/Entities
-
-## Verified Sources
-
-- Official docs: https://docs.unity3d.com/6000.0/Documentation/Manual/index.html
-- Unity 6 release: https://unity.com/releases/unity-6
-- Unity 6.3 LTS announcement: https://unity.com/blog/unity-6-3-lts-is-now-available
-- Migration guide: https://docs.unity3d.com/6000.0/Documentation/Manual/upgrade-guides.html
-- Unity 6 support: https://unity.com/releases/unity-6/support
-- C# API reference: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/index.html
+运行 `/setup-engine refresh` 检查新的 Unity 版本并更新参考文档。

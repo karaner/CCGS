@@ -1,48 +1,52 @@
-# Technical Preferences
+# 技术偏好
 
-<!-- Populated by /setup-engine. Updated as the user makes decisions throughout development. -->
-<!-- All agents reference this file for project-specific standards and conventions. -->
+<!-- 由 /setup-engine 填充。根据用户在开发过程中所做的决策更新。 -->
+<!-- 所有 agents 参考此文件以获取项目特定的标准和约定。 -->
 
-## Engine & Language
+## 引擎和语言
 
-- **Engine**: [TO BE CONFIGURED — run /setup-engine]
-- **Language**: [TO BE CONFIGURED]
-- **Rendering**: [TO BE CONFIGURED]
-- **Physics**: [TO BE CONFIGURED]
+- **引擎**: Unity 2023.2
+- **语言**: C#
+- **渲染**: 2D（主要），后续可能 3D
+- **物理**: Unity Physics (2D)
 
-## Naming Conventions
+## 命名规范
 
-- **Classes**: [TO BE CONFIGURED]
-- **Variables**: [TO BE CONFIGURED]
-- **Signals/Events**: [TO BE CONFIGURED]
-- **Files**: [TO BE CONFIGURED]
-- **Scenes/Prefabs**: [TO BE CONFIGURED]
-- **Constants**: [TO BE CONFIGURED]
+- **类**: PascalCase（例如 `PlayerController`）
+- **公开字段/属性**: PascalCase（例如 `MoveSpeed`）
+- **私有字段**: _camelCase（例如 `_moveSpeed`）
+- **方法**: PascalCase（例如 `TakeDamage()`）
+- **文件**: PascalCase 匹配类名（例如 `PlayerController.cs`）
+- **常量**: PascalCase 或 UPPER_SNAKE_CASE
+- **场景/预制体**: PascalCase（例如 `BattleScene`、`CardPrefab`）
+- **信号/事件**: PascalCase（例如 `OnCardPlayed`、`HealthChanged`）
 
-## Performance Budgets
+## 性能预算
 
-- **Target Framerate**: [TO BE CONFIGURED]
-- **Frame Budget**: [TO BE CONFIGURED]
-- **Draw Calls**: [TO BE CONFIGURED]
-- **Memory Ceiling**: [TO BE CONFIGURED]
+- **目标帧率**: 60fps
+- **帧预算**: 16.6ms
+- **绘制调用**: 每场景 < 100（使用对象池）
+- **内存上限**: 初始加载 < 512MB
 
-## Testing
+> **注意**: 这些是建议值。如需调整或确认，请告知。
 
-- **Framework**: [TO BE CONFIGURED]
-- **Minimum Coverage**: [TO BE CONFIGURED]
-- **Required Tests**: Balance formulas, gameplay systems, networking (if applicable)
+## 测试
 
-## Forbidden Patterns
+- **框架**: NUnit + Unity Test Framework
+- **最低覆盖率**: 核心战斗系统和卡牌效果系统需要单元测试
+- **必需测试**: 平衡公式、游戏机制
 
-<!-- Add patterns that should never appear in this project's codebase -->
-- [None configured yet — add as architectural decisions are made]
+## 禁止的模式
 
-## Allowed Libraries / Addons
+- 不要使用 `GameObject.Find()` 或 `FindObjectOfType()` — 使用依赖注入或事件系统
+- 不要在 Update() 中每帧分配内存 — 使用对象池
+- 不要硬编码卡牌数值 — 使用 ScriptableObject 数据资产
 
-<!-- Add approved third-party dependencies here -->
-- [None configured yet — add as dependencies are approved]
+## 允许的库/插件
 
-## Architecture Decisions Log
+- [尚未配置 — 批准依赖后添加]
 
-<!-- Quick reference linking to full ADRs in docs/architecture/ -->
-- [No ADRs yet — use /architecture-decision to create one]
+## 架构决策日志
+
+<!-- 快速参考，链接到 docs/architecture/ 中的完整 ADR -->
+- [尚无 ADR — 使用 /architecture-decision 创建]

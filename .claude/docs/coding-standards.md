@@ -1,25 +1,23 @@
-# Coding Standards
+# 编码标准
 
-- All game code must include doc comments on public APIs
-- Every system must have a corresponding architecture decision record in `docs/architecture/`
-- Gameplay values must be data-driven (external config), never hardcoded
-- All public methods must be unit-testable (dependency injection over singletons)
-- Commits must reference the relevant design document or task ID
-- **Verification-driven development**: Write tests first when adding gameplay systems.
-  For UI changes, verify with screenshots. Compare expected output to actual output
-  before marking work complete. Every implementation should have a way to prove it works.
+- 所有游戏代码必须在公共 API 上包含文档注释
+- 每个系统必须在 `docs/architecture/` 中有对应的架构决策记录
+- 游戏数值必须是数据驱动的（外部配置），不得硬编码
+- 所有公共方法必须可单元测试（使用依赖注入而非单例）
+- 提交必须引用相关的设计文档或任务 ID
+- **验证驱动开发**: 添加游戏系统时先写测试。UI 变更必须用截图验证。对比预期输出和实际输出后再标记工作完成。每实现一个功能都必须有办法证明它正常工作。
 
-# Design Document Standards
+# 设计文档标准
 
-- All design docs use Markdown
-- Each mechanic has a dedicated document in `design/gdd/`
-- Documents must include these 8 required sections:
-  1. **Overview** -- one-paragraph summary
-  2. **Player Fantasy** -- intended feeling and experience
-  3. **Detailed Rules** -- unambiguous mechanics
-  4. **Formulas** -- all math defined with variables
-  5. **Edge Cases** -- unusual situations handled
-  6. **Dependencies** -- other systems listed
-  7. **Tuning Knobs** -- configurable values identified
-  8. **Acceptance Criteria** -- testable success conditions
-- Balance values must link to their source formula or rationale
+- 所有设计文档使用 Markdown
+- 每个机制在 `design/gdd/` 中有专门文档
+- 文档必须包含以下 8 个必需部分：
+  1. **概述** -- 一段式总结
+  2. **玩家幻想** -- 预期感受和体验
+  3. **详细规则** -- 明确的机制描述
+  4. **公式** -- 所有数学定义和变量
+  5. **边缘情况** -- 异常情况的处理方式
+  6. **依赖** -- 列出的其他系统
+  7. **调节旋钮** -- 识别的可配置数值
+  8. **验收标准** -- 可测试的成功条件
+- 平衡数值必须链接到其来源公式或理由

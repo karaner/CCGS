@@ -1,107 +1,95 @@
-# Context Management
+# 上下文管理
 
-Context is the most critical resource in a Claude Code session. Manage it actively.
+上下文是 Claude Code 会话中最关键的资源。主动管理它。
 
-## File-Backed State (Primary Strategy)
+## 文件支持的状态（主要策略）
 
-**The file is the memory, not the conversation.** Conversations are ephemeral and
-will be compacted or lost. Files on disk persist across compactions and session crashes.
+**文件是记忆，不是对话。** 对话是临时的，会被压缩或丢失。磁盘上的文件在压缩和会话崩溃后仍然存在。
 
-### Session State File
+### 会话状态文件
 
-Maintain `production/session-state/active.md` as a living checkpoint. Update it
-after each significant milestone:
+在每个重要里程碑后更新 `production/session-state/active.md`：
 
-- Design section approved and written to file
-- Architecture decision made
-- Implementation milestone reached
-- Test results obtained
+- 设计部分批准并写入文件
+- 架构决策做出
+- 实现里程碑达到
+- 测试结果获得
 
-The state file should contain: current task, progress checklist, key decisions
-made, files being worked on, and open questions.
+状态文件应包含：当前任务、进度检查清单、做出的关键决策、正在处理的文件、悬而未决的问题。
 
-### Status Line Block (Production+ only)
+### 状态行块（仅限生产阶段）
 
-When the project is in Production, Polish, or Release stage, include a structured
-status block in `active.md` that the status line script can parse:
+当项目处于生产、打磨或发布阶段时，在 `active.md` 中包含状态行脚本可解析的结构化状态块：
 
 ```markdown
 <!-- STATUS -->
-Epic: Combat System
-Feature: Melee Combat
-Task: Implement hitbox detection
+Epic: 战斗系统
+Feature: 近战战斗
+Task: 实现碰撞箱检测
 <!-- /STATUS -->
 ```
 
-- All three fields (Epic, Feature, Task) are optional — include only what applies
-- Update this block when switching focus areas
-- The status line displays it as a breadcrumb: `Combat System > Melee Combat > Hitboxes`
-- Remove or empty the block when no active work focus exists
+- 三个字段（Epic、Feature、Task）都是可选的——只包含适用的
+- 切换焦点区域时更新此块
+- 状态行显示为路径：`战斗系统 > 近战战斗 > 碰撞箱`
+- 没有活动工作焦点时移除或清空此块
 
-After any disruption (compaction, crash, `/clear`), read the state file first.
+任何中断（压缩、崩溃、`/clear`）后，首先读取状态文件。
 
-### Incremental File Writing
+### 增量文件写入
 
-When creating multi-section documents (design docs, architecture docs, lore entries):
+创建多部分文档时（设计文档、架构文档、 lore 条目）：
 
-1. Create the file immediately with a skeleton (all section headers, empty bodies)
-2. Discuss and draft one section at a time in conversation
-3. Write each section to the file as soon as it's approved
-4. Update the session state file after each section
-5. After writing a section, previous discussion about that section can be safely
-   compacted — the decisions are in the file
+1. 立即创建文件（所有章节标题，空正文）
+2. 在对话中一次讨论和起草一个部分
+3. 批准后立即将每个部分写入文件
+4. 每个部分后更新会话状态文件
+5. 写完一个部分后，关于该部分的先前讨论可以安全地被压缩——决策已在文件中
 
-This keeps the context window holding only the *current* section's discussion
-(~3-5k tokens) instead of the entire document's conversation history (~30-50k tokens).
+这将上下文窗口保持在当前部分讨论（约 3-5k tokens）而不是整个文档的对话历史（约 30-50k tokens）。
 
-## Proactive Compaction
+## 主动压缩
 
-- **Compact proactively** at ~60-70% context usage, not reactively at the limit
-- **Use `/clear`** between unrelated tasks, or after 2+ failed correction attempts
-- **Natural compaction points:** after writing a section to file, after committing,
-  after completing a task, before starting a new topic
-- **Focused compaction:** `/compact Focus on [current task] — sections 1-3 are
-  written to file, working on section 4`
+- **在约 60-70% 上下文使用时主动压缩**，而不是在达到限制时被动反应
+- 在不相关任务之间或连续 2+ 次纠正尝试失败后使用 `/clear`
+- **自然压缩点**：写入文件后、提交后、完成任务后、开始新主题前
+- **集中压缩**：`/compact 专注于 [当前任务] — 第 1-3 节已写入文件，正在进行第 4 节`
 
-## Context Budgets by Task Type
+## 按任务类型的上下文预算
 
-- Light (read/review): ~3k tokens startup
-- Medium (implement feature): ~8k tokens
-- Heavy (multi-system refactor): ~15k tokens
+- 轻量级（读取/审查）：约 3k tokens 启动
+- 中量级（实现功能）：约 8k tokens
+- 重量级（多系统重构）：约 15k tokens
 
-## Subagent Delegation
+## 子 Agent 委托
 
-Use subagents for research and exploration to keep the main session clean.
-Subagents run in their own context window and return only summaries:
+使用子 Agent 进行研究和探索，保持主会话简洁。子 Agent 在自己的上下文窗口中运行，只返回摘要：
 
-- **Use subagents** when investigating across multiple files, exploring unfamiliar code,
-  or doing research that would consume >5k tokens of file reads
-- **Use direct reads** when you know exactly which 1-2 files to check
-- Subagents do not inherit conversation history — provide full context in the prompt
+- **使用子 Agent**：跨多个文件调查、探索不熟悉的代码、或做会消耗 >5k tokens 文件读取的研究
+- **使用直接读取**：当你确切知道要检查哪 1-2 个文件时
+- 子 Agent 不继承对话历史——在提示中提供完整上下文
 
-## Compaction Instructions
+## 压缩说明
 
-When context is compacted, preserve the following in the summary:
+压缩上下文时，在摘要中保留以下内容：
 
-- Reference to `production/session-state/active.md` (read it to recover state)
-- List of files modified in this session and their purpose
-- Any architectural decisions made and their rationale
-- Active sprint tasks and their current status
-- Agent invocations and their outcomes (success/failure/blocked)
-- Test results (pass/fail counts, specific failures)
-- Unresolved blockers or questions awaiting user input
-- The current task and what step we are on
-- Which sections of the current document are written to file vs. still in progress
+- 引用 `production/session-state/active.md`（读取它以恢复状态）
+- 本会话修改的文件列表及其目的
+- 做出的任何架构决策及其理由
+- 活动冲刺任务及其当前状态
+- Agent 调用及其结果（成功/失败/阻塞）
+- 测试结果（通过/失败计数，具体失败）
+- 未解决的障碍或等待用户输入的问题
+- 当前任务及所处步骤
+- 当前文档的哪些部分已写入文件 vs 仍在进行中
 
-**After compaction:** Read `production/session-state/active.md` and any files being
-actively worked on to recover full context. The files contain the decisions; the
-conversation history is secondary.
+**压缩后**：读取 `production/session-state/active.md` 和任何正在主动处理的文件以恢复完整上下文。文件包含决策；对话历史是次要的。
 
-## Recovery After Session Crash
+## 会话崩溃后恢复
 
-If a session dies ("prompt too long") or you start a new session to continue work:
+如果会话死亡（"提示太长"）或启动新会话来继续工作：
 
-1. The `session-start.sh` hook will detect and preview `active.md` automatically
-2. Read the full state file for context
-3. Read the partially-completed file(s) listed in the state
-4. Continue from the next incomplete section or task
+1. `session-start.sh` 钩子会自动检测并预览 `active.md`
+2. 读取完整状态文件获取上下文
+3. 读取状态中列出的部分完成文件
+4. 从下一个未完成的章节或任务继续

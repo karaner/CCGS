@@ -1,154 +1,69 @@
-# Unity 6.3 LTS — Breaking Changes
+# Unity 2023.2 — 破坏性变更
 
-**Last verified:** 2026-02-13
+**最后验证:** 2026-03-31
 
-This document tracks breaking API changes and behavioral differences between Unity 2022 LTS
-(likely in model training) and Unity 6.3 LTS (current version). Organized by risk level.
+本文档追踪 Unity 2022 LTS（可能在模型训练中）与 Unity 2023.2 之间的破坏性 API 变更和行为差异。
 
-## HIGH RISK — Will Break Existing Code
-
-### Entities/DOTS API Complete Overhaul
-**Versions:** Entities 1.0+ (Unity 6.0+)
-
-```csharp
-// ❌ OLD (pre-Unity 6, GameObjectEntity pattern)
-public class HealthComponent : ComponentData {
-    public float Value;
-}
-
-// ✅ NEW (Unity 6+, IComponentData)
-public struct HealthComponent : IComponentData {
-    public float Value;
-}
-
-// ❌ OLD: ComponentSystem
-public class DamageSystem : ComponentSystem { }
-
-// ✅ NEW: ISystem (unmanaged, Burst-compatible)
-public partial struct DamageSystem : ISystem {
-    public void OnCreate(ref SystemState state) { }
-    public void OnUpdate(ref SystemState state) { }
-}
-```
-
-**Migration:** Follow Unity's ECS migration guide. Major architectural changes required.
+> **注意:** Unity 2023.2 在 LLM 训练数据范围内，此文档仅供参考。
+> 主要破坏性变更多数在 Unity 6.x 版本。
 
 ---
 
-### Input System — Legacy Input Deprecated
-**Versions:** Unity 6.0+
+## Unity 2023.2 中的已知变更
+
+### Input System 包变更
+**版本:** Unity 2023.x
+
+安装 Input System 包后，遗留 Input 类仍然可用，但新项目推荐使用 Input System。
 
 ```csharp
-// ❌ OLD: Input class (deprecated)
-if (Input.GetKeyDown(KeyCode.Space)) { }
-
-// ✅ NEW: Input System package
+// ✅ 推荐: Input System
 using UnityEngine.InputSystem;
-if (Keyboard.current.spaceKey.wasPressedThisFrame) { }
-```
-
-**Migration:** Install Input System package, replace all `Input.*` calls with new API.
-
----
-
-### URP/HDRP Renderer Feature API Changes
-**Versions:** Unity 6.0+
-
-```csharp
-// ❌ OLD: ScriptableRenderPass.Execute signature
-public override void Execute(ScriptableRenderContext context, ref RenderingData data)
-
-// ✅ NEW: Uses RenderGraph API
-public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
-```
-
-**Migration:** Update custom render passes to use RenderGraph API.
-
----
-
-## MEDIUM RISK — Behavioral Changes
-
-### Addressables — Asset Loading Returns
-**Versions:** Unity 6.2+
-
-Asset loading failures now throw exceptions by default instead of returning null.
-Add proper exception handling or use `TryLoad` variants.
-
-```csharp
-// ❌ OLD: Silent null on failure
-var handle = Addressables.LoadAssetAsync<Sprite>("key");
-var sprite = handle.Result; // null if failed
-
-// ✅ NEW: Throws on failure, use try/catch or TryLoad
-try {
-    var handle = Addressables.LoadAssetAsync<Sprite>("key");
-    var sprite = await handle.Task;
-} catch (Exception e) {
-    Debug.LogError($"Failed to load: {e}");
+if (Keyboard.current.spaceKey.wasPressedThisFrame) {
+    Jump();
 }
 ```
 
 ---
 
-### Physics — Default Solver Iterations Changed
-**Versions:** Unity 6.0+
+### Addressables 改进
+**版本:** Unity 2023.x
 
-Default solver iterations increased for better stability.
-Check `Physics.defaultSolverIterations` if you rely on old behavior.
+异步加载模式是标准做法。
 
----
-
-## LOW RISK — Deprecations (Still Functional)
-
-### UGUI (Legacy UI)
-**Status:** Deprecated but supported
-**Replacement:** UI Toolkit
-
-UGUI still works but UI Toolkit is recommended for new projects.
+```csharp
+// ✅ 推荐: 异步加载
+var handle = Addressables.LoadAssetAsync<Sprite>("key");
+var sprite = await handle.Task;
+```
 
 ---
 
-### Legacy Particle System
-**Status:** Deprecated
-**Replacement:** Visual Effect Graph (VFX Graph)
-
----
-
-### Old Animation System
-**Status:** Deprecated
-**Replacement:** Animator Controller (Mecanim)
-
----
-
-## Platform-Specific Breaking Changes
+## 平台特定注意事项
 
 ### WebGL
-- **Unity 6.0+**: WebGPU is now the default (WebGL 2.0 fallback available)
-- Update shaders for WebGPU compatibility
+- Unity 2023.2 支持 WebGL 2.0
+- WebGPU 在 Unity 6.x 中成为默认
 
 ### Android
-- **Unity 6.0+**: Minimum API level raised to 24 (Android 7.0)
+- 最低 API 等级: Android 5.0 (API 21)
 
 ### iOS
-- **Unity 6.0+**: Minimum deployment target raised to iOS 13
+- 最低部署目标: iOS 12.0
 
 ---
 
-## Migration Checklist
+## 迁移检查清单
 
-When upgrading from 2022 LTS to Unity 6.3 LTS:
+从旧版本迁移到 Unity 2023.2 时:
 
-- [ ] Audit all DOTS/ECS code (complete rewrite likely needed)
-- [ ] Replace `Input` class with Input System package
-- [ ] Update custom render passes to RenderGraph API
-- [ ] Add exception handling to Addressables calls
-- [ ] Test physics behavior (solver iterations changed)
-- [ ] Consider migrating UGUI to UI Toolkit for new UI
-- [ ] Update WebGL shaders for WebGPU
-- [ ] Verify minimum platform versions (Android/iOS)
+- [ ] 审核所有第三方依赖兼容性
+- [ ] 检查 Addressables 异步加载使用情况
+- [ ] 确认物理系统行为未改变
+- [ ] 验证平台最低版本要求
 
 ---
 
-**Sources:**
-- https://docs.unity3d.com/6000.0/Documentation/Manual/upgrade-guides.html
-- https://docs.unity3d.com/Packages/com.unity.entities@1.3/manual/upgrade-guide.html
+**参考来源:**
+- https://docs.unity3d.com/2023.2/Documentation/Manual/
+- https://unity.com/releases/editor/whats-new/2023.2.0

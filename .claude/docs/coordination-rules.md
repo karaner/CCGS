@@ -1,13 +1,7 @@
-# Agent Coordination Rules
+# Agent 协调规则
 
-1. **Vertical Delegation**: Leadership agents delegate to department leads, who
-   delegate to specialists. Never skip a tier for complex decisions.
-2. **Horizontal Consultation**: Agents at the same tier may consult each other
-   but must not make binding decisions outside their domain.
-3. **Conflict Resolution**: When two agents disagree, escalate to the shared
-   parent. If no shared parent, escalate to `creative-director` for design
-   conflicts or `technical-director` for technical conflicts.
-4. **Change Propagation**: When a design change affects multiple domains, the
-   `producer` agent coordinates the propagation.
-5. **No Unilateral Cross-Domain Changes**: An agent must never modify files
-   outside its designated directories without explicit delegation.
+1. **垂直委托**: 领导 Agent 委托给部门负责人，部门负责人委托给专家。复杂决策不要跳过层级。
+2. **横向协商**: 同层级的 Agent 可以互相协商，但不得在其领域外做出有约束力的决策。
+3. **冲突解决**: 当两个 Agent 出现分歧时，升级到共同的父级。如果没有共同父级，设计冲突升级到 `creative-director`，技术冲突升级到 `technical-director`。
+4. **变更传播**: 当设计变更影响多个领域时，由 `producer` Agent 协调传播。
+5. **禁止单方面跨领域变更**: Agent 不得在其指定目录之外修改文件，除非获得明确授权。
